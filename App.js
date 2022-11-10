@@ -19,6 +19,9 @@ const App = () =>{
   const [isLoggedIn,setIsLoggedIn] = React.useState(false);
   const [homeTodayScore, setHomeTodayScore] = React.useState(0);
   const [tempCode, setTempCode] = React.useState(null);
+
+
+
   useEffect(()=>{
   const getSessionToken = async() => {
     const sessionToken = await AsyncStorage.getItem('sessionToken');
@@ -26,6 +29,8 @@ const App = () =>{
     const validateResponse = await fetch('https://dev.stedi.me/validate/'+sessionToken);
     if(validateResponse.status == 200){
       const userEmail = await validateResponse.text();
+      await AsyncStorage.setItem('userName',userEmail);
+      console.log('userEmail',userEmail);
       setIsLoggedIn(true);
     }
   }
@@ -55,7 +60,7 @@ return(
           onPress={async()=>{
             console.log(phoneNumber + 'Button was pressed')
 
-            await fetch(
+            const sendTextResponse=await fetch(
               'https://dev.stedi.me/twofactorlogin/' + phoneNumber,
               {
                 method:'POST',
@@ -64,6 +69,10 @@ return(
                 }
               }
             )
+            if (sendTextResponse.status!=200){
+              console.log('Server send text response: '+sendTextResponse.status);
+              alert('Communication Error','server repsonded to send text with status: '+sendTextResponse.status);
+            }
           }}
         />  
         <TextInput 
@@ -92,9 +101,6 @@ return(
                 })
               }
             )
-            console.log("status",loginResponse.status)
-            const loginToken = await loginResponse.text()
-            console.log("Login Token", loginToken)
 
             if(loginResponse.status == 200){
               const sessionToken = await loginResponse.text();
@@ -103,8 +109,8 @@ return(
               setIsLoggedIn(true);
             }
             else{
-              console.log("token resonce Status",loginResponse.status)
-              Alert.alert('Warning', 'An invalid Code was entered.')
+              console.log("response status",loginResponse.status)
+              Alert.alert('Invalid','An invalid Code was entered.')
             }
           }}
         />      
