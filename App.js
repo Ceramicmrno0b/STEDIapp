@@ -34,7 +34,8 @@ const App = () =>{
       setIsLoggedIn(true);
     }
   }
-  }
+  getSessionToken();
+  },[]
   )
 
    if (isFirstLaunch == true &&! isLoggedIn){
@@ -78,7 +79,7 @@ return(
         <TextInput 
         value={tempCode}
         onChangeText={setTempCode}
-          style={styles.input2}  
+          style={styles.input}  
           placeholderTextColor='#4251f5' 
           placeholder='Enter Code'>          
         </TextInput>
@@ -101,7 +102,7 @@ return(
                 })
               }
             )
-
+            console.log(loginResponse.status)
             if(loginResponse.status == 200){
               const sessionToken = await loginResponse.text();
               await AsyncStorage.setItem('sessionToken', sessionToken)

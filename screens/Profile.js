@@ -14,22 +14,22 @@ const cameraOptions={//
 }//
 
 const Profile = (props) => {
-  const [userName,setUserName] = useState("");
+  const [userEmail,setUserEmail] = useState('');
   const [cameraPermission, setCameraPermission] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const cameraRef = useRef(null);
   const [cameraReady,setCameraReady] = useState(false);//
   useEffect(()=>{
-    const getUserName = async ()=>{
+    const getUserEmail = async ()=>{
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
       setCameraPermission(cameraPermission);
-      const username = AsyncStorage.getItem('userName');
-      setUserName(userName);
-      await AsyncStorage.removeItem('profilePhoto')//temp
+      const userEmail = await AsyncStorage.getItem('userEmail');
+      setUserEmail(userEmail);
+//      await AsyncStorage.removeItem('profilePhoto')//temp
       const profilePhoto = await AsyncStorage.getItem('profilePhoto');//
       setProfilePhoto(profilePhoto);//
     }
-    getUserName();
+    getUserEmail();
   },[]);
 
   const myCustomerShare = async() =>{
@@ -63,8 +63,8 @@ const Profile = (props) => {
         </View>
       )
       
-    }//
-else{
+    }
+else{//
   return (
     <SafeAreaView style={{flex: 1}}>
          <Card style={{backgroundColor:'white', borderRadius: 10, margin:20 ,width: 320, shadowColor: "#000",
@@ -80,7 +80,7 @@ elevation: 4}}>
      <CardContent>
      <Image style={{height: 100, width:100, borderRadius: 75}}
       source={{uri:profilePhoto}} /> 
-    <Text style={{marginTop:10,marginBottom:10,fontWeight: 'bold'}}>{userName}</Text>
+    <Text style={{marginTop:10,marginBottom:10,fontWeight: 'bold'}}>{userEmail}</Text>
 
     <Text style={{marginTop:20,marginBottom:2}}>This Week's progress</Text>
 {/* <BarChart barColor='green' data={data} horizontalData={horizontalData} /> */}
@@ -92,7 +92,7 @@ elevation: 4}}>
  </SafeAreaView>
   );
 }};
-export default Profile;//below
+export default Profile;//paste from slack 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
